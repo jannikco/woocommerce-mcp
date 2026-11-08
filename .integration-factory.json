@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "status": "ready",
+  "verification": "mock-only",
+  "releaseEligible": true,
+  "maintainer": "jannikco",
+  "license": "MIT",
+  "sourceRevision": "a15a6732aac074dc6df4acc929c08f25fa7f00719990a4c0b3bdb961fbec8ff0",
+  "evidence": [
+    "Source-backed provider setup metadata",
+    "Offline configuration and MCP protocol tests"
+  ],
+  "provenance": [
+    "https://woocommerce.github.io/woocommerce-rest-api-docs/"
+  ],
+  "id": "woocommerce-mcp",
+  "kind": "mcp-setup",
+  "product": "pipmcp",
+  "title": "WooCommerce MCP setup and connection checker",
+  "description": "Generate WooCommerce MCP client configuration, inspect available tools and validate hosted endpoint access through PipMCP.",
+  "operationIds": [],
+  "appSlug": "woocommerce",
+  "appName": "WooCommerce",
+  "providerDocs": "https://woocommerce.github.io/woocommerce-rest-api-docs/",
+  "providerWebsite": "https://woocommerce.com/",
+  "authentication": {
+    "type": "basic",
+    "requiredCredentialFields": [
+      "username",
+      "password"
+    ],
+    "requiredHeaderNames": [],
+    "helpUrl": "https://woocommerce.com/document/woocommerce-rest-api/",
+    "tenantRequired": true,
+    "accountParameterNames": []
+  },
+  "attributionSlug": "github-woocommerce-mcp",
+  "factory": "leadadapter-pipmcp",
+  "generatorVersion": 1
+}
