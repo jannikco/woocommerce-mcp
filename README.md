@@ -1,50 +1,71 @@
-# WooCommerce MCP setup and connection checker
+# WooCommerce MCP server
 
-Generate WooCommerce MCP client configuration, inspect available tools and validate hosted endpoint access through PipMCP.
+Read your store customer list and create a customer account through your own WooCommerce API.
 
-Maintainer: jannikco · License: MIT · Verification: **mock-only**
+A direct-provider MCP server with useful local execution. No PipMCP account is required for local use. Provider API access and any provider charges are your responsibility.
 
 ## Quick start
 
-Requires Node.js 22 or later.
+Requires Node.js22+. Clone this repository, then run:
 
 ```sh
-npm ci
+npm ci --ignore-scripts
 npm test
 npm start
 ```
 
-The default example runs locally without credentials and makes no external changes. Verification status describes recorded evidence; local configuration tests do not establish that provider authentication or execution works.
+The default command inspects the tools offline. Configure your own credentials in your environment:
 
-## Connect woocommerce
+- `WOOCOMMERCE_CONSUMER_KEY`
+- `WOOCOMMERCE_CONSUMER_SECRET`
+- `WOOCOMMERCE_HOST`
 
-[Create or sign in to PipMCP](https://pipmcp.com/register?app=woocommerce&utm_source=github&utm_campaign=github-woocommerce-mcp) and select the integration. Connect your authorized provider account and copy its hosted MCP endpoint. Set PIPMCP_ENDPOINT and, if required, PIPMCP_TOKEN in your environment. Run npm start to produce client configuration; run npm start -- --live for a read-only connection check. Provider app presence is catalog evidence, not live verification.
 
-## Managed service
 
-[Continue with PipMCP](https://pipmcp.com/register?app=woocommerce&utm_source=github&utm_campaign=github-woocommerce-mcp). This repository is maintained by the integration team and does not imply endorsement by LinkedIn or other providers.
+Credential help: https://woocommerce.com/document/woocommerce-rest-api/
 
-## Provenance and support
+## Execute a real read
 
-Source revision: a15a6732aac074dc6df4acc929c08f25fa7f00719990a4c0b3bdb961fbec8ff0. The complete manifest is in integration.json; SHA256SUMS covers the reviewed artifact. Open a repository issue without credentials or personal data. See SECURITY.md for sensitive reports. No telemetry is sent by this code; signup links include explicit campaign parameters.
+Replace example record IDs with records you are authorized to access.
 
-## Provider setup inventory
-
-Run `npm start -- --setup` to inspect this app's recorded authentication requirements and setup links offline. Credentials are entered in PipMCP; this repository lists required field names only.
-
-```json
-{
-  "type": "basic",
-  "requiredCredentialFields": [
-    "username",
-    "password"
-  ],
-  "requiredHeaderNames": [],
-  "helpUrl": "https://woocommerce.com/document/woocommerce-rest-api/",
-  "tenantRequired": true,
-  "accountParameterNames": []
-}
+```sh
+npm start -- --call woocommerce_list_customers '{}'
 ```
 
-Provider documentation: https://woocommerce.github.io/woocommerce-rest-api-docs/
-Provider website: https://woocommerce.com/
+## Use with an MCP client
+
+Launch `node /absolute/path/woocommerce-mcp/server.mjs` using stdio transport; pass credentials through the client environment. Stdout is reserved for JSON-RPC.
+
+## Tools
+
+| Tool | Effect | Purpose |
+| --- | --- | --- |
+| woocommerce_list_customers | Read | woocommerce list customers |
+| woocommerce_get_customer | Read | woocommerce get customer |
+| woocommerce_create_customer | Explicit approval required | woocommerce create customer |
+
+## Concrete workflow
+
+Read your store customer list and create a customer account through your own WooCommerce API.
+
+1. woocommerce_list_customers
+2. woocommerce_get_customer
+3. woocommerce_create_customer
+
+## Optional writes
+
+Writes are disabled by default. Set CONNECTOR_ALLOW_WRITES=true and supply `_approval: {approved:true,idempotencyKey:"unique-request-id"}` on the specific call. Do not reuse a key for a different request. Uncertain outcomes are never automatically replayed; inspect the provider before another attempt.
+
+## Capability evidence
+
+Local: **Tested — HTTP fixtures and real stdio tools/call**. Managed: **Documented**. Provider authentication and live operations have not been established by these fixture tests. Evidence applies per operation and execution mode; setup discovery does not imply provider execution.
+
+## Managed production
+
+[Import with PipMCP](https://pipmcp.com/github/start?integration=openapi-to-mcp&utm_source=github&utm_campaign=github-woocommerce-mcp&utm_content=readme) when you want the hosted service. This provider is not currently listed as a managed template. Import selected-openapi.json (REST) or the official GraphQL schema linked in provenance, configure authentication, and review the tools before execution. Local credentials are not uploaded by this code. Review provider permissions in the managed onboarding. [Directory and related projects](https://jannikco.github.io/pipmcp-connectors/integrations/woocommerce/).
+
+## Provenance and maintenance
+
+- https://woocommerce.github.io/woocommerce-rest-api-docs/#customers
+
+Maintainer:jannikco. MIT license for this code. See connector.json for selected operations and integration.json for evidence. Runtime dependencies retain their own licenses. Report sensitive issues through https://pipmcp.com/contact; do not post credentials or customer data in public issues.

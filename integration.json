@@ -5,20 +5,23 @@
   "releaseEligible": true,
   "maintainer": "jannikco",
   "license": "MIT",
-  "sourceRevision": "a15a6732aac074dc6df4acc929c08f25fa7f00719990a4c0b3bdb961fbec8ff0",
+  "sourceRevision": "22367989bb00600ea99e145dace66b72cae3181d5fba521a19795e3903241ff3",
   "evidence": [
-    "Source-backed provider setup metadata",
-    "Offline configuration and MCP protocol tests"
+    "Actual tools/call and direct-provider request contract tests"
   ],
   "provenance": [
-    "https://woocommerce.github.io/woocommerce-rest-api-docs/"
+    "https://woocommerce.github.io/woocommerce-rest-api-docs/#customers"
   ],
   "id": "woocommerce-mcp",
-  "kind": "mcp-setup",
+  "kind": "provider-connector",
   "product": "pipmcp",
-  "title": "WooCommerce MCP setup and connection checker",
-  "description": "Generate WooCommerce MCP client configuration, inspect available tools and validate hosted endpoint access through PipMCP.",
-  "operationIds": [],
+  "title": "WooCommerce MCP server",
+  "description": "Read your store customer list and create a customer account through your own WooCommerce API.",
+  "operationIds": [
+    "woocommerce_list_customers",
+    "woocommerce_get_customer",
+    "woocommerce_create_customer"
+  ],
   "appSlug": "woocommerce",
   "appName": "WooCommerce",
   "providerDocs": "https://woocommerce.github.io/woocommerce-rest-api-docs/",
@@ -29,10 +32,324 @@
       "username",
       "password"
     ],
+    "settings": {},
     "requiredHeaderNames": [],
     "helpUrl": "https://woocommerce.com/document/woocommerce-rest-api/",
     "tenantRequired": true,
     "accountParameterNames": []
   },
-  "attributionSlug": "github-woocommerce-mcp"
+  "attributionSlug": "github-woocommerce-mcp",
+  "artifactType": "connector",
+  "qualityVersion": 2,
+  "connectorId": "woocommerce",
+  "connector": {
+    "id": "woocommerce",
+    "name": "WooCommerce",
+    "version": "0.1.0",
+    "baseUrl": "https://{WOOCOMMERCE_HOST}/wp-json/wc/v3",
+    "auth": {
+      "type": "basic",
+      "usernameEnv": "WOOCOMMERCE_CONSUMER_KEY",
+      "passwordEnv": "WOOCOMMERCE_CONSUMER_SECRET"
+    },
+    "tools": [
+      {
+        "name": "woocommerce_list_customers",
+        "description": "woocommerce list customers",
+        "method": "GET",
+        "path": "/customers",
+        "readOnly": true,
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "per_page": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "page": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "bindings": {
+          "path": [],
+          "query": {
+            "per_page": "per_page",
+            "page": "page"
+          },
+          "body": {}
+        },
+        "approvalRequired": false,
+        "provenance": [
+          "https://woocommerce.github.io/woocommerce-rest-api-docs/#customers"
+        ],
+        "evidence": {
+          "state": "documented",
+          "providerLiveValidation": "not-run"
+        },
+        "sampleArguments": {}
+      },
+      {
+        "name": "woocommerce_get_customer",
+        "description": "woocommerce get customer",
+        "method": "GET",
+        "path": "/customers/{id}",
+        "readOnly": true,
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "required": [
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        "bindings": {
+          "path": [
+            "id"
+          ],
+          "query": {},
+          "body": {}
+        },
+        "approvalRequired": false,
+        "provenance": [
+          "https://woocommerce.github.io/woocommerce-rest-api-docs/#customers"
+        ],
+        "evidence": {
+          "state": "documented",
+          "providerLiveValidation": "not-run"
+        },
+        "sampleArguments": {
+          "id": 42
+        }
+      },
+      {
+        "name": "woocommerce_create_customer",
+        "description": "woocommerce create customer",
+        "method": "POST",
+        "path": "/customers",
+        "readOnly": false,
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string"
+            },
+            "first_name": {
+              "type": "string"
+            },
+            "last_name": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "email"
+          ],
+          "additionalProperties": false
+        },
+        "bindings": {
+          "path": [],
+          "query": {},
+          "body": {
+            "email": "email",
+            "first_name": "first_name",
+            "last_name": "last_name"
+          }
+        },
+        "approvalRequired": true,
+        "provenance": [
+          "https://woocommerce.github.io/woocommerce-rest-api-docs/#customers"
+        ],
+        "evidence": {
+          "state": "documented",
+          "providerLiveValidation": "not-run"
+        },
+        "sampleArguments": {
+          "email": "sandbox@example.com"
+        }
+      }
+    ],
+    "workflow": {
+      "name": "woocommerce-workflow",
+      "description": "Read your store customer list and create a customer account through your own WooCommerce API.",
+      "steps": [
+        "woocommerce_list_customers",
+        "woocommerce_get_customer",
+        "woocommerce_create_customer"
+      ]
+    },
+    "provenance": [
+      "https://woocommerce.github.io/woocommerce-rest-api-docs/#customers"
+    ],
+    "sourceEvidence": {
+      "state": "documented",
+      "providerLiveValidation": "not-run",
+      "checkedAt": "2026-11-08",
+      "operationCount": 3,
+      "kind": "official-documentation"
+    },
+    "setup": {
+      "requiresPipMcpAccount": false,
+      "credentialsHelpUrl": "https://woocommerce.com/document/woocommerce-rest-api/",
+      "instructions": "In WordPress admin go to WooCommerce > Settings > Advanced > REST API, click 'Add key', choose a user and Read/Write permission, then copy the Consumer key (ck_...) and Consumer secret (cs_...). Your site must use HTTPS."
+    },
+    "hostVariables": [
+      "WOOCOMMERCE_HOST"
+    ],
+    "sampleWarning": "Example IDs are placeholders, not known provider records. Replace them with authorized sandbox/account IDs. Contact emails, file URLs and recipient numbers must be replaced with data you are authorized to use. Examples never authorize a write.",
+    "repoId": "woocommerce-mcp",
+    "appSlug": "woocommerce",
+    "product": "pipmcp",
+    "artifactType": "connector",
+    "sourceRevision": "22367989bb00600ea99e145dace66b72cae3181d5fba521a19795e3903241ff3",
+    "capabilityEvidence": {
+      "local": {
+        "level": "Tested",
+        "operations": [
+          {
+            "name": "woocommerce_list_customers",
+            "level": "Tested",
+            "evidenceRefs": [
+              "Provider request/stdio contract tests"
+            ],
+            "method": "contract-fixture"
+          },
+          {
+            "name": "woocommerce_get_customer",
+            "level": "Tested",
+            "evidenceRefs": [
+              "Provider request/stdio contract tests"
+            ],
+            "method": "contract-fixture"
+          },
+          {
+            "name": "woocommerce_create_customer",
+            "level": "Tested",
+            "evidenceRefs": [
+              "Provider request/stdio contract tests"
+            ],
+            "method": "contract-fixture"
+          }
+        ],
+        "evidenceRefs": [
+          "Provider request/stdio contract tests"
+        ],
+        "mode": "local"
+      },
+      "managed": {
+        "level": "Documented",
+        "operations": [
+          {
+            "name": "woocommerce_list_customers",
+            "level": "Documented",
+            "evidenceRefs": [],
+            "method": "documentation"
+          },
+          {
+            "name": "woocommerce_get_customer",
+            "level": "Documented",
+            "evidenceRefs": [],
+            "method": "documentation"
+          },
+          {
+            "name": "woocommerce_create_customer",
+            "level": "Documented",
+            "evidenceRefs": [],
+            "method": "documentation"
+          }
+        ],
+        "evidenceRefs": [],
+        "mode": "managed"
+      }
+    },
+    "authentication": {
+      "type": "basic",
+      "requiredCredentialFields": [
+        "username",
+        "password"
+      ],
+      "settings": {},
+      "requiredHeaderNames": [],
+      "helpUrl": "https://woocommerce.com/document/woocommerce-rest-api/",
+      "tenantRequired": true,
+      "accountParameterNames": []
+    },
+    "managedAvailability": {
+      "status": "import-required",
+      "integration": "openapi-to-mcp",
+      "checkedAt": "2026-11-08T12:29:10.433747+00:00"
+    }
+  },
+  "capabilityEvidence": {
+    "local": {
+      "level": "Tested",
+      "operations": [
+        {
+          "name": "woocommerce_list_customers",
+          "level": "Tested",
+          "evidenceRefs": [
+            "Provider request/stdio contract tests"
+          ],
+          "method": "contract-fixture"
+        },
+        {
+          "name": "woocommerce_get_customer",
+          "level": "Tested",
+          "evidenceRefs": [
+            "Provider request/stdio contract tests"
+          ],
+          "method": "contract-fixture"
+        },
+        {
+          "name": "woocommerce_create_customer",
+          "level": "Tested",
+          "evidenceRefs": [
+            "Provider request/stdio contract tests"
+          ],
+          "method": "contract-fixture"
+        }
+      ],
+      "evidenceRefs": [
+        "Provider request/stdio contract tests"
+      ],
+      "mode": "local"
+    },
+    "managed": {
+      "level": "Documented",
+      "operations": [
+        {
+          "name": "woocommerce_list_customers",
+          "level": "Documented",
+          "evidenceRefs": [],
+          "method": "documentation"
+        },
+        {
+          "name": "woocommerce_get_customer",
+          "level": "Documented",
+          "evidenceRefs": [],
+          "method": "documentation"
+        },
+        {
+          "name": "woocommerce_create_customer",
+          "level": "Documented",
+          "evidenceRefs": [],
+          "method": "documentation"
+        }
+      ],
+      "evidenceRefs": [],
+      "mode": "managed"
+    }
+  },
+  "utility": {
+    "problem": "Read your store customer list and create a customer account through your own WooCommerce API.",
+    "output": "Actual provider API results through local MCP tools"
+  }
 }
