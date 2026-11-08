@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "version": "1.0.0",
+  "product": "pipmcp",
+  "credential": "PIPMCP_API_KEY",
+  "skills": [
+    {
+      "name": "pipmcp-woocommerce",
+      "description": "Connect AI agents to WooCommerce using one PipMCP API key and actual hosted tool discovery."
+    }
+  ],
+  "files": {
+    "skills/pipmcp-woocommerce/SKILL.md": "a86ddae8170b49f188f47ac2c8c4f66762d509d2936a8a801a942e82a9e9b4ef"
+  }
+}
